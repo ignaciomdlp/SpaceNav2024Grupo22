@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 
-public class Nave4 extends Entidad {
+public class Nave4 extends Entidad implements Mover{
     private boolean destruida = false;
     private int vidas = 3;
     private boolean herido = false;
@@ -16,6 +16,7 @@ public class Nave4 extends Entidad {
     private Sound sonidoHerido;
     private Sound soundBala;
     private Texture txBala;
+    private static final int constantVel = 3;
 
     public Nave4(int x, int y, Texture tx, Sound soundChoque, Texture txBala, Sound soundBala) {
         super(x, y, 45, 0, 0, tx);
@@ -25,22 +26,62 @@ public class Nave4 extends Entidad {
     }
 
     @Override
+    public void moverArriba() {
+        setYSpeed(constantVel);
+    }
+    
+    @Override
+    public void moverAbajo() {
+        setYSpeed(-constantVel);
+    }
+    
+    @Override
+    public void moverIzquierda() {
+        setXSpeed(-constantVel);
+    }
+    
+    @Override
+    public void moverDerecha() {
+        setXSpeed(constantVel);
+    }
+    
+    @Override
     protected void handleBorders() {
-        if (x + xSpeed < 0 || x + xSpeed + sprite.getWidth() > Gdx.graphics.getWidth()) {
-            xSpeed *= -1;
+    // VERIFICA QUE LA NAVE NO SE SALGA DE LOS BORDES DE LA PANTALLA
+        if (x < 0) {
+            x = 0; // AJUSTE A LÍMITE IZQUIERDO
+        } else if (x + sprite.getWidth() > Gdx.graphics.getWidth()) {
+            x = (int) (Gdx.graphics.getWidth() - sprite.getWidth()); // AJUSTE A LÍMITE DERECHO
         }
-        if (y + ySpeed < 0 || y + ySpeed + sprite.getHeight() > Gdx.graphics.getHeight()) {
-            ySpeed *= -1;
+
+        if (y < 0) {
+            y = 0; // AJUSTE A LÍMITE INFERIOR
+        } else if (y + sprite.getHeight() > Gdx.graphics.getHeight()) {
+            y = (int) (Gdx.graphics.getHeight() - sprite.getHeight()); // AJUSTE A LÍMITE SUPERIOR
         }
+    }
+    
+    // CAMBIO: IMPLEMENTACIÓN DE REACCIÓN ANTE BORDES
+    @Override
+    protected void onHorizontalBorderHit() {
+        setXSpeed(0); // DETIENE EL MOVIMIENTO HORIZONTAL AL TOCAR EL BORDE
+    }
+
+    @Override
+    protected void onVerticalBorderHit() {
+        setYSpeed(0); // DETIENE EL MOVIMIENTO VERTICAL AL TOCAR EL BORDE
     }
 
     public void draw(SpriteBatch batch, PantallaJuego juego) {
         if (!herido) {
-            // Control de movimiento con teclado
-            if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) setXSpeed(getXSpeed() - 1);
-            if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) setXSpeed(getXSpeed() + 1);
-            if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) setYSpeed(getYSpeed() - 1);
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) setYSpeed(getYSpeed() + 1);
+            // Control de movimiento con WASD
+            setXSpeed(0);
+            setYSpeed(0);
+
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) moverIzquierda();
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) moverDerecha();
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) moverAbajo();
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) moverArriba();
 
             super.update();
             draw(batch);

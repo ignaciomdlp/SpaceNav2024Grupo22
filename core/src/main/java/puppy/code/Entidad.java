@@ -20,15 +20,34 @@ public abstract class Entidad {
         this.sprite = new Sprite(texture);
         this.sprite.setPosition(x, y);
     }
-
+    
     public void update() {
         x += xSpeed;
         y += ySpeed;
         handleBorders();
         sprite.setPosition(x, y);
     }
+    
+    protected void handleBorders() {
+        checkBorders();
+    }
+    
+        // CAMBIO: AGREGAMOS MÉTODO DE CHEQUEO DE BORDES
+    protected void checkBorders() {
+        if (x < 0 || x + sprite.getWidth() > com.badlogic.gdx.Gdx.graphics.getWidth()) {
+            onHorizontalBorderHit();
+        }
+        if (y < 0 || y + sprite.getHeight() > com.badlogic.gdx.Gdx.graphics.getHeight()) {
+            onVerticalBorderHit();
+        }
+    }
 
-    protected abstract void handleBorders();
+    // CAMBIO: MÉTODOS ABSTRACTOS PARA REACCIONAR ANTE BORDES
+    protected abstract void onHorizontalBorderHit();
+    protected abstract void onVerticalBorderHit();
+
+
+    //protected abstract void handleBorders();
 
     public Rectangle getArea() {
         return sprite.getBoundingRectangle();
@@ -70,7 +89,5 @@ public abstract class Entidad {
         this.y = y;
         sprite.setY(y); // Actualiza la posición del sprite
     }
-
-
 }
 

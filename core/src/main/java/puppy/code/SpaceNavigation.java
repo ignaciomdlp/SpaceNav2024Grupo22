@@ -14,6 +14,7 @@ public class SpaceNavigation extends Game {
 	private BitmapFont font;
 	private int highScore;	
 
+        @Override
 	public void create() {
 		highScore = 0;
 		batch = new SpriteBatch();
@@ -22,11 +23,13 @@ public class SpaceNavigation extends Game {
 		Screen ss = new PantallaMenu(this);
 		this.setScreen(ss);
 	}
-
+        
+        @Override
 	public void render() {
 		super.render(); // important!
 	}
-
+        
+        @Override
 	public void dispose() {
 		batch.dispose();
 		font.dispose();
@@ -47,7 +50,4 @@ public class SpaceNavigation extends Game {
 	public void setHighScore(int highScore) {
 		this.highScore = highScore;
 	}
-	
-	
-
 }
