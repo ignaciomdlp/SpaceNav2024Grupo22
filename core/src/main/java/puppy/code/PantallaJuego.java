@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -30,24 +31,25 @@ public class PantallaJuego implements Screen {
     private ArrayList<Bullet> bullets = new ArrayList<>();
 
     public PantallaJuego(SpaceNavigation game, int round, int lives, int score,
-                         int asteroidXSpeed, int asteroidYSpeed, int asteroidCount) {
+        int asteroidXSpeed, int asteroidYSpeed, int asteroidCount) {
         this.game = game;
         this.round = round;
         this.score = score;
         this.asteroidXSpeed = asteroidXSpeed;
         this.asteroidYSpeed = asteroidYSpeed;
         this.asteroidCount = asteroidCount;
+        game.setPantallaJuego(this);  // Registrar esta instancia como la actual
 
         batch = game.getBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 640);
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-        explosionSound.setVolume(1, 0.5f);
+        explosionSound.setVolume(1, 0.1f);
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(0.5f);
-        gameMusic.play();
+        gameMusic.setVolume(0.1f);
+
 
         ship = new Nave4(Gdx.graphics.getWidth() / 2 - 50, 30,
                 new Texture(Gdx.files.internal("MainShip3.png")),
@@ -80,6 +82,10 @@ public class PantallaJuego implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         drawHeader();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(MenuPausa.getInstancia(game));  // Cambiar al menú de pausa (patron singleton)
+        }
 
         if (!ship.isInjured()) {
             // Handle bullet collisions with asteroids
@@ -158,6 +164,9 @@ public class PantallaJuego implements Screen {
 
     public boolean addBullet(Bullet bullet) {
         return bullets.add(bullet);
+    }
+    public Music getGameMusic() {
+        return gameMusic;
     }
 
     @Override
