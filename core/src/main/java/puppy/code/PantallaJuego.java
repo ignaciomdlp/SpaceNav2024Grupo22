@@ -45,10 +45,10 @@ public class PantallaJuego implements Screen {
         camera.setToOrtho(false, 800, 640);
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
-        explosionSound.setVolume(1, 0.1f);
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("piano-loops.wav"));
+        explosionSound.setVolume(1, 0.0001f);
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("musiquita.mp3"));
         gameMusic.setLooping(true);
-        gameMusic.setVolume(0.1f);
+        gameMusic.setVolume(0.9f);
 
 
         ship = new Nave4(Gdx.graphics.getWidth() / 2 - 50, 30,
