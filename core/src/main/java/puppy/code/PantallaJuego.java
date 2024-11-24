@@ -42,7 +42,7 @@ public class PantallaJuego implements Screen {
 
         batch = game.getBatch();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 640);
+        camera.setToOrtho(false);
 
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("explosion.ogg"));
         explosionSound.setVolume(1, 0.0001f);
@@ -145,7 +145,7 @@ public class PantallaJuego implements Screen {
                 game.setHighScore(score);
             }
             Screen gameOverScreen = new PantallaGameOver(game);
-            gameOverScreen.resize(1200, 800);
+            //gameOverScreen.resize(1200, 800);
             game.setScreen(gameOverScreen);
             dispose();
         }
@@ -156,7 +156,7 @@ public class PantallaJuego implements Screen {
         if (balls1.isEmpty()) {
             Screen nextLevelScreen = new PantallaJuego(game, round + 1, ship.getLives(), score,
                     asteroidXSpeed + 3, asteroidYSpeed + 3, asteroidCount + 10);
-            nextLevelScreen.resize(1200, 800);
+            //nextLevelScreen.resize(1200, 800);
             game.setScreen(nextLevelScreen);
             dispose();
         }
