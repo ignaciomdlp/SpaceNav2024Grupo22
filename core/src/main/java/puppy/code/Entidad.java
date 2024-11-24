@@ -6,7 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Entidad {
-    protected int x, y, xSpeed, ySpeed;
+    protected int x, y;
+    protected float xSpeed, ySpeed;
     protected Sprite sprite;
 
     public Entidad(int x, int y, int size, int xSpeed, int ySpeed, Texture texture) {
@@ -28,10 +29,10 @@ public abstract class Entidad {
     public Rectangle getArea() { return sprite.getBoundingRectangle(); }
     public void draw(SpriteBatch batch) { sprite.draw(batch); }
 
-    public int getXSpeed() { return xSpeed; }
-    public int getYSpeed() { return ySpeed; }
-    public void setXSpeed(int xSpeed) { this.xSpeed = xSpeed; }
-    public void setYSpeed(int ySpeed) { this.ySpeed = ySpeed; }
+    public float getXSpeed() { return xSpeed; }
+    public float getYSpeed() { return ySpeed; }
+    public void setXSpeed(float xSpeed) { this.xSpeed = xSpeed; }
+    public void setYSpeed(float ySpeed) { this.ySpeed = ySpeed; }
     public int getX() { return x; }
     public int getY() { return y; }
     public void setX(int x) { this.x = x; sprite.setX(x); }

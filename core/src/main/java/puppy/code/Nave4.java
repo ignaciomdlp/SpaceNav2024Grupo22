@@ -12,30 +12,33 @@ public class Nave4 extends Entidad implements Mover {
     private int lives = 3, injuredTime, injuredTimeMax = 50;
     private Sound injuredSound, shootSound;
     private Texture bulletTex;
-    private static final int SPEED = 3;
     private ShootingStrategy shootingStrategy;
+    private float speedMultiplier = 1.0f;
+    private static final int BASE_SPEED = 3;
 
     public Nave4(int x, int y, Texture tex, Sound injuredSound, Texture bulletTex, Sound shootSound) {
         super(x, y, 45, 0, 0, tex);
         this.injuredSound = injuredSound;
         this.shootSound = shootSound;
         this.bulletTex = bulletTex;
-        //this.shootingStrategy = new SimpleShootStrategy();
-        this.shootingStrategy = new TripleShootStrategy();
+        this.shootingStrategy = new SimpleShootStrategy();
     }
 
     public void setShootingStrategy(ShootingStrategy strategy) {
         this.shootingStrategy = strategy;
     }
-
+        @Override
+    public void moverArriba() { setYSpeed(BASE_SPEED * speedMultiplier); }
     @Override
-    public void moverArriba() { setYSpeed(SPEED); }
+    public void moverAbajo() { setYSpeed(-BASE_SPEED * speedMultiplier); }
     @Override
-    public void moverAbajo() { setYSpeed(-SPEED); }
+    public void moverIzquierda() { setXSpeed(-BASE_SPEED * speedMultiplier); }
     @Override
-    public void moverIzquierda() { setXSpeed(-SPEED); }
-    @Override
-    public void moverDerecha() { setXSpeed(SPEED); }
+    public void moverDerecha() { setXSpeed(BASE_SPEED * speedMultiplier); }
+    
+    public void setSpeedMultiplier(float multiplier) {
+        this.speedMultiplier = multiplier;
+    }
 
     @Override
     protected void handleBorders() {

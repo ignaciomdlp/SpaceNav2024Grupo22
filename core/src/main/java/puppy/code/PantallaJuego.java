@@ -24,6 +24,7 @@ public class PantallaJuego implements Screen {
     private int asteroidXSpeed;
     private int asteroidYSpeed;
     private int asteroidCount;
+    private PowerUpBuilder powerUpBuilder;
 
     private Nave4 ship;
     private ArrayList<Ball2> balls1 = new ArrayList<>();
@@ -38,7 +39,7 @@ public class PantallaJuego implements Screen {
         this.asteroidXSpeed = asteroidXSpeed;
         this.asteroidYSpeed = asteroidYSpeed;
         this.asteroidCount = asteroidCount;
-        game.setPantallaJuego(this);  // Registrar esta instancia como la actual
+        game.setPantallaJuego(this);
 
         batch = game.getBatch();
         camera = new OrthographicCamera();
@@ -50,13 +51,15 @@ public class PantallaJuego implements Screen {
         gameMusic.setLooping(true);
         gameMusic.setVolume(0.9f);
 
-
         ship = new Nave4(Gdx.graphics.getWidth() / 2 - 50, 30,
                 new Texture(Gdx.files.internal("MainShip3.png")),
                 Gdx.audio.newSound(Gdx.files.internal("hurt.ogg")),
                 new Texture(Gdx.files.internal("Rocket2.png")),
                 Gdx.audio.newSound(Gdx.files.internal("pop-sound.mp3")));
         ship.setLives(lives);
+        
+        // Inicializar el PowerUpBuilder
+        powerUpBuilder = new PowerUpBuilder(ship, score);
 
         Random r = new Random();
         for (int i = 0; i < asteroidCount; i++) {
@@ -75,16 +78,32 @@ public class PantallaJuego implements Screen {
         game.getFont().draw(batch, str, 10, 30);
         game.getFont().draw(batch, "Score: " + score, Gdx.graphics.getWidth() - 150, 30);
         game.getFont().draw(batch, "HighScore: " + game.getHighScore(), Gdx.graphics.getWidth() / 2 - 100, 30);
+        
+        // Mostrar información de power-ups activos
+        String powerUpInfo = "";
+        if (score >= 450) {
+            powerUpInfo = "Triple Shot + Max Speed";
+        } else if (score >= 200) {
+            powerUpInfo = "Double Shot + Speed Boost";
+        } else {
+            powerUpInfo = "Normal";
+        }
+        game.getFont().draw(batch, "Power-ups: " + powerUpInfo, 10, 60);
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        
+        // Actualizar power-ups basados en el puntaje actual
+        powerUpBuilder = new PowerUpBuilder(ship, score);
+        powerUpBuilder.buildPowerUps();
+        
         drawHeader();
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(MenuPausa.getInstancia(game));  // Cambiar al menú de pausa (patron singleton)
+            game.setScreen(MenuPausa.getInstancia(game));
         }
 
         if (!ship.isInjured()) {
@@ -145,7 +164,6 @@ public class PantallaJuego implements Screen {
                 game.setHighScore(score);
             }
             Screen gameOverScreen = new PantallaGameOver(game);
-            //gameOverScreen.resize(1200, 800);
             game.setScreen(gameOverScreen);
             dispose();
         }
@@ -156,7 +174,6 @@ public class PantallaJuego implements Screen {
         if (balls1.isEmpty()) {
             Screen nextLevelScreen = new PantallaJuego(game, round + 1, ship.getLives(), score,
                     asteroidXSpeed + 3, asteroidYSpeed + 3, asteroidCount + 10);
-            //nextLevelScreen.resize(1200, 800);
             game.setScreen(nextLevelScreen);
             dispose();
         }
@@ -165,6 +182,7 @@ public class PantallaJuego implements Screen {
     public boolean addBullet(Bullet bullet) {
         return bullets.add(bullet);
     }
+
     public Music getGameMusic() {
         return gameMusic;
     }
