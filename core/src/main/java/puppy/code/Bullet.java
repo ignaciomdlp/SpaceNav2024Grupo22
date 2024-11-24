@@ -9,14 +9,25 @@ public class Bullet {
     private int xSpeed, ySpeed;
     private boolean destroyed = false;
     private Sprite sprite;
+    private float rotation;
 
     public Bullet(float x, float y, int xSpeed, int ySpeed, Texture tex) {
         sprite = new Sprite(tex);
         sprite.setPosition(x, y);
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
+        this.rotation = 0;
     }
-
+    
+    public Bullet(float x, float y, int xSpeed, int ySpeed, Texture tex, float rotation) {
+        sprite = new Sprite(tex);
+        sprite.setPosition(x, y);
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.rotation = -rotation;
+        sprite.setRotation(rotation);
+    }   
+    
     public void update() {
         sprite.setPosition(sprite.getX() + xSpeed, sprite.getY() + ySpeed);
         if (sprite.getX() < 0 || sprite.getX() + sprite.getWidth() > Gdx.graphics.getWidth()
@@ -24,8 +35,9 @@ public class Bullet {
             destroyed = true;
         }
     }
-
+    
     public void draw(SpriteBatch batch) {
+        sprite.setRotation(rotation); // Asegúrate de que la rotación esté aplicada
         sprite.draw(batch);
     }
 

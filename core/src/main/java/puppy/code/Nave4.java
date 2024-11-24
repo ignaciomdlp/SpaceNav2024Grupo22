@@ -20,7 +20,8 @@ public class Nave4 extends Entidad implements Mover {
         this.injuredSound = injuredSound;
         this.shootSound = shootSound;
         this.bulletTex = bulletTex;
-        this.shootingStrategy = new SimpleShootStrategy();
+        //this.shootingStrategy = new SimpleShootStrategy();
+        this.shootingStrategy = new TripleShootStrategy();
     }
 
     public void setShootingStrategy(ShootingStrategy strategy) {
