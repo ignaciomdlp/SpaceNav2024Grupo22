@@ -13,12 +13,18 @@ public class Nave4 extends Entidad implements Mover {
     private Sound injuredSound, shootSound;
     private Texture bulletTex;
     private static final int SPEED = 3;
+    private ShootingStrategy shootingStrategy;
 
     public Nave4(int x, int y, Texture tex, Sound injuredSound, Texture bulletTex, Sound shootSound) {
         super(x, y, 45, 0, 0, tex);
         this.injuredSound = injuredSound;
         this.shootSound = shootSound;
         this.bulletTex = bulletTex;
+        this.shootingStrategy = new SimpleShootStrategy();
+    }
+
+    public void setShootingStrategy(ShootingStrategy strategy) {
+        this.shootingStrategy = strategy;
     }
 
     @Override
@@ -56,8 +62,7 @@ public class Nave4 extends Entidad implements Mover {
             if (injuredTime <= 0) injured = false;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            Bullet bullet = new Bullet(getX() + sprite.getWidth() / 2 - 5, getY() + sprite.getHeight() - 5, 0, 3, bulletTex);
-            game.addBullet(bullet);
+            shootingStrategy.shoot(getX() + sprite.getWidth() / 2 - 5, getY() + sprite.getHeight() - 5, game, bulletTex);
             shootSound.play();
         }
     }
